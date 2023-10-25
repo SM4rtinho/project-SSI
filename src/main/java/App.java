@@ -2,6 +2,7 @@ import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -42,6 +43,35 @@ public class App {
 
         get("/users", (request, response) ->
             gson.toJson(users.values()));
+
+        get("/test", (request, response) ->
+                {
+                    String message = "xd";
+                    try{
+                        Class.forName("org.sqlite.JDBC");
+                        String jdbcUrl = "jdbc:sqlite:D:\\Nowy folder\\intelJ\\FB123\\src\\main\\java\\com\\example\\fb123\\football2.db";
+                        Connection connection = DriverManager.getConnection(jdbcUrl);
+                        String sql = "SELECT * from club";
+
+                        Statement statement = connection.createStatement();
+                        ResultSet result = statement.executeQuery(sql);
+
+                        while (result.next()){
+                            String id = result.getString("id");
+                            String name = result.getString("name");
+
+                            message = id + " | " + name + "\n";
+                        }
+
+                    }
+                    catch (SQLException e){
+                        e.printStackTrace();
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    return message;
+                });
 
     }
 }
