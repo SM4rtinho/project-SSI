@@ -23,6 +23,8 @@ public class App {
         Connection dbConnection = Database.getConnection();
         UserDao userDao = new UserDao(dbConnection);
 
+        AuthService authService = new AuthService();
+
         post("/user", (request, response) -> {
             String jsonUser = request.body();
 
@@ -48,6 +50,39 @@ public class App {
             List<User> users = userDao.getAllUsers();
 
             return gson.toJson(users);
+        });
+
+        post("/login", (request, response) -> {
+            String jsonUser = request.body();
+
+            User userLogin = gson.fromJson(jsonUser, User.class);
+
+            User user = authService.authenticate(userLogin.getEmail(), userLogin.getPassword(), userDao);
+
+            if (user == null) {
+                response.status(401);
+                return "Unauthorized";
+            }
+
+            response.status(200);
+            return "Logged in";
+        });
+
+        post("/register", (request, response) -> {
+            String jsonUser = request.body();
+
+            User userRegister = gson.fromJson(jsonUser, User.class);
+
+            Boolean result = authService.register(userRegister.getEmail(), userRegister.getPassword(),
+                    userRegister.getName(), userRegister.getRole(), userDao);
+
+            if (!result) {
+                response.status(409); // Conflict - user already exists
+                return "User already exists";
+            }
+
+            response.status(200);
+            return "User created";
         });
     }
 }

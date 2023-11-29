@@ -78,5 +78,35 @@ public class UserDao {
         return userList;
     }
 
+    public User getUserByEmail(String email) {
+        String sql = "SELECT * FROM user WHERE email = ?";
+        User user = null;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, email);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                user = mapResultSetToUser(resultSet);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+
+    private User mapResultSetToUser(ResultSet resultSet) throws SQLException {
+        User user = new User();
+        user.setId(resultSet.getInt("id"));
+        user.setCurr_date(resultSet.getDate("curr_date"));
+        user.setEmail(resultSet.getString("email"));
+        user.setName(resultSet.getString("name"));
+        user.setPassword(resultSet.getString("password"));
+        user.setRole(resultSet.getString("role"));
+        user.setClub_id(resultSet.getLong("club_id"));
+        return user;
+    }
+
 
 }
