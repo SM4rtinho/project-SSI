@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+<<<<<<< HEAD
     <data-source source="LOCAL" name="football.db" uuid="2bbadce8-b578-4d14-b2fe-7f3d28a4c0c5">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:$USER_HOME$/OneDrive - Politechnika Krakowska im. Tadeusza Kościuszki/Studia/Semestr VII/SSI/projekt/football.db</jdbc-url>
+=======
+    <data-source source="LOCAL" name="football.db" uuid="35d6b622-68e0-4b94-be8c-de11adfdd63d">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/../../../../database/football.db</jdbc-url>
+>>>>>>> Seba
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
