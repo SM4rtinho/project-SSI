@@ -1,3 +1,5 @@
+import DAO.UserDAO;
+import DTO.User;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +23,7 @@ public class App {
 
         // Inicjalizacja połączenia z bazą danych SQLite
         Connection dbConnection = Database.getConnection();
-        UserDao userDao = new UserDao(dbConnection);
+        UserDAO userDao = new UserDAO(dbConnection);
 
         post("/user", (request, response) -> {
             String jsonUser = request.body();
@@ -30,7 +32,7 @@ public class App {
 
             if (user == null) {
                 response.status(400);
-                return "User not created";
+                return "Model.User not created";
             }
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -40,7 +42,7 @@ public class App {
             userDao.createUser(user);
 
             response.status(200);
-            return "User created with ID";
+            return "Model.User created with ID";
         });
 
         get("/users", (request, response) -> {

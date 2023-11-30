@@ -1,3 +1,7 @@
+package DAO;
+
+import DTO.User;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -5,10 +9,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDao {
+public class UserDAO {
     private Connection connection;
 
-    public UserDao(Connection connection) {
+    public UserDAO(Connection connection) {
         this.connection = connection;
     }
 
@@ -22,6 +26,34 @@ public class UserDao {
             statement.setString(4, user.getPassword());
             statement.setString(5, user.getRole());
             statement.setLong(6, user.getClub_id());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateUser(User user) {
+        String sql = "UPDATE user SET curr_date=?, email=?, name=?, password=?, role=?, club_id=? WHERE id=?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setDate(1, user.getCurr_date());
+            statement.setString(2, user.getEmail());
+            statement.setString(3, user.getName());
+            statement.setString(4, user.getPassword());
+            statement.setString(5, user.getRole());
+            statement.setLong(6, user.getClub_id());
+            statement.setInt(7, user.getId()); // używamy id do określenia, którego użytkownika zaktualizować
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteUser(long id) {
+        String sql = "DELETE FROM user WHERE id=?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -77,6 +109,4 @@ public class UserDao {
 
         return userList;
     }
-
-
 }

@@ -1,3 +1,5 @@
+package DTO;
+
 import java.sql.Date;
 
 public class User {
@@ -11,7 +13,15 @@ public class User {
 
     public User() {
     }
-
+    public User(Integer id, Date curr_date, String email, String name, String password, String role, long club_id) {
+        this.id = id;
+        this.curr_date = curr_date;
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.role = role;
+        this.club_id = club_id;
+    }
     public Integer getId() {
         return id;
     }
@@ -66,5 +76,18 @@ public class User {
 
     public void setClub_id(long club_id) {
         this.club_id = club_id;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", curr_date=" + curr_date +
+                ", email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                ", club_id=" + club_id +
+                '}';
     }
 }
