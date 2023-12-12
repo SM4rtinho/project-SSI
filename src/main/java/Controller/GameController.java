@@ -5,6 +5,7 @@ import DAO.GameDAO;
 import DTO.Club;
 import DTO.Game;
 import com.google.gson.Gson;
+import com.sun.xml.bind.v2.TODO;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -73,7 +74,7 @@ public class GameController {
         // Generowanie meczów
         get("/generate", "application/json", (request, response) -> {
             response.type("application/json");
-            //generateGames();
+            generateGames();
             return gson.toJson("Games have been generated.");
         });
 
@@ -146,8 +147,8 @@ public class GameController {
 //                Club awayClub = clubs.get(j);
 //
 //                Game game = new Game();
-//                game.setClub1(homeClub);
-//                game.setClub2(awayClub);
+//                game.setClub1(homeClub.getId());
+//                game.setClub2(awayClub.getId());
 //                game.setGameDate(startDate);
 //
 //                gameDAO.createGame(game);
@@ -159,7 +160,36 @@ public class GameController {
 //                startDate = calendar.getTime();
 //            }
 //        }
-//    } TODO
+//    }
+
+    private void generateGames() {
+        List<Club> clubs = clubDAO.getAllClubs();
+        java.util.Date utilStartDate = new java.util.Date(); // Zainicjowanie daty na dzisiaj
+
+        for (int i = 0; i < clubs.size() - 1; i++) {
+            Club homeClub = clubs.get(i);
+
+            for (int j = i + 1; j < clubs.size(); j++) {
+                Club awayClub = clubs.get(j);
+
+                Game game = new Game();
+                game.setClub1(homeClub.getId());
+                game.setClub2(awayClub.getId());
+
+                // Konwersja java.util.Date na java.sql.Date
+                Date sqlStartDate = new Date(utilStartDate.getTime());
+                game.setGameDate(sqlStartDate);
+
+                gameDAO.createGame(game);
+
+                // Dodanie 3 dni do daty
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(utilStartDate);
+                calendar.add(Calendar.DAY_OF_YEAR, 3);
+                utilStartDate = calendar.getTime();
+            }
+        }
+    }
 
     private void simulateAllGames() {
         List<Game> games = gameDAO.getAllGames();
@@ -195,7 +225,7 @@ public class GameController {
             gameDAO.updateGame(game);
         }
 
-        //clubDAO.updateAllClubs(clubs); TODO
+        clubDAO.updateAllClubs(clubs);
     }
 
     private void updateClubStatistics(Club club1, Club club2, int goalsClub1, int goalsClub2) {

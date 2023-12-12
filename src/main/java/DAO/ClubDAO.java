@@ -102,6 +102,30 @@ public class ClubDAO {
         return clubList;
     }
 
+    public void updateAllClubs(List<Club> clubs) {
+        String sql = "UPDATE club SET name=?, matches_played=?, matches_won=?, matches_draw=?, matches_lost=?, points=?, user_id=?, grade=?, budget=? WHERE id=?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            for (Club club : clubs) {
+                statement.setString(1, club.getName());
+                statement.setInt(2, club.getMatchesPlayed());
+                statement.setInt(3, club.getMatchesWon());
+                statement.setInt(4, club.getMatchesDraw());
+                statement.setInt(5, club.getMatchesLost());
+                statement.setInt(6, club.getPoints());
+                statement.setInt(7, club.getUser());
+                statement.setInt(8, club.getGrade());
+                statement.setInt(9, club.getBudget());
+                statement.setLong(10, club.getId()); // używamy id do określenia, którego klubu zaktualizować
+                statement.addBatch();
+            }
+
+            statement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private Club mapResultSetToClub(ResultSet resultSet) throws SQLException {
         Club club = new Club();
         club.setId(resultSet.getInt("id"));
