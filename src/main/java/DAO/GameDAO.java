@@ -18,14 +18,14 @@ public class GameDAO {
     }
 
     public void createGame(Game game) {
-        String sql = "INSERT INTO game (game_date, club1_id, club2_id, goals_club1, goals_club2, " +
+        String sql = "INSERT INTO game (game_date, club_1_id, club_2_id, goals_club1, goals_club2, " +
                 "shots_club1, shots_club2, possession_club1, possession_club2, " +
                 "passes_club1, passes_club2, is_played) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setDate(1, game.getGameDate());
-            statement.setInt(2, game.getClub1());
-            statement.setInt(3, game.getClub2());
+            statement.setLong(2, game.getClub1());
+            statement.setLong(3, game.getClub2());
             statement.setInt(4, game.getGoalsClub1());
             statement.setInt(5, game.getGoalsClub2());
             statement.setInt(6, game.getShotsClub1());
@@ -42,14 +42,14 @@ public class GameDAO {
     }
 
     public void updateGame(Game game) {
-        String sql = "UPDATE game SET game_date=?, club1_id=?, club2_id=?, goals_club1=?, goals_club2=?, " +
+        String sql = "UPDATE game SET game_date=?, club_1_id=?, club_2_id=?, goals_club1=?, goals_club2=?, " +
                 "shots_club1=?, shots_club2=?, possession_club1=?, possession_club2=?, " +
                 "passes_club1=?, passes_club2=?, is_played=? WHERE id=?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setDate(1, game.getGameDate());
-            statement.setInt(2, game.getClub1());
-            statement.setInt(3, game.getClub2());
+            statement.setLong(2, game.getClub1());
+            statement.setLong(3, game.getClub2());
             statement.setInt(4, game.getGoalsClub1());
             statement.setInt(5, game.getGoalsClub2());
             statement.setInt(6, game.getShotsClub1());
@@ -117,11 +117,28 @@ public class GameDAO {
         Game game = new Game();
         game.setId(resultSet.getInt("id"));
         game.setGameDate(resultSet.getDate("game_date"));
-        ClubDAO clubDAO = new ClubDAO(connection);
-        Club club1 = clubDAO.getClubById(resultSet.getLong("club1_id"));
-        Club club2 = clubDAO.getClubById(resultSet.getLong("club2_id"));
-        game.setClub1(club1.getId());
-        game.setClub2(club2.getId());
+//        ClubDAO clubDAO = new ClubDAO(connection);
+//        Club club1 = clubDAO.getClubById(resultSet.getLong("club_1_id"));
+//        Club club2 = clubDAO.getClubById(resultSet.getLong("club_2_id"));
+//        game.setClub1(club1.getId());
+//        game.setClub2(club2.getId());
+
+        // Sprawdź, czy club1 nie jest null przed wywołaniem getId()
+        if (resultSet.getObject("club_1_id") != null) {
+            Club club1 = new Club();
+            club1.setId(resultSet.getInt("club_1_id"));
+            // Ustawienia dla Club...
+            game.setClub1(club1.getId());
+        }
+
+        // Sprawdź, czy club2 nie jest null przed wywołaniem getId()
+        if (resultSet.getObject("club_2_id") != null) {
+            Club club2 = new Club();
+            club2.setId(resultSet.getInt("club_2_id"));
+            // Ustawienia dla Club...
+            game.setClub2(club2.getId());
+        }
+
         game.setGoalsClub1(resultSet.getInt("goals_club1"));
         game.setGoalsClub2(resultSet.getInt("goals_club2"));
         game.setShotsClub1(resultSet.getInt("shots_club1"));

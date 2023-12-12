@@ -19,7 +19,7 @@ public class PlayerDAO {
 
     public void createPlayer(Player player) {
         String sql = "INSERT INTO player (first_name, last_name, speed, shooting, defending, passing, " +
-                "price, is_taken, is_first_xi, club_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "price, is_taken, is_firstxi, club_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, player.getFirstName());
@@ -31,7 +31,7 @@ public class PlayerDAO {
             statement.setInt(7, player.getPrice());
             statement.setBoolean(8, player.isTaken());
             statement.setBoolean(9, player.isFirstXI());
-            statement.setInt(10, player.getClub());
+            statement.setLong(10, player.getClub());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -40,7 +40,7 @@ public class PlayerDAO {
 
     public void updatePlayer(Player player) {
         String sql = "UPDATE player SET first_name=?, last_name=?, speed=?, shooting=?, defending=?, " +
-                "passing=?, price=?, is_taken=?, is_first_xi=?, club_id=? WHERE id=?";
+                "passing=?, price=?, is_taken=?, is_firstxi=?, club_id=? WHERE id=?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, player.getFirstName());
@@ -52,7 +52,7 @@ public class PlayerDAO {
             statement.setInt(7, player.getPrice());
             statement.setBoolean(8, player.isTaken());
             statement.setBoolean(9, player.isFirstXI());
-            statement.setInt(10, player.getClub());
+            statement.setLong(10, player.getClub());
             statement.setLong(11, player.getId()); // używamy id do określenia, którego zawodnika zaktualizować
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -118,11 +118,16 @@ public class PlayerDAO {
         player.setPassing(resultSet.getInt("passing"));
         player.setPrice(resultSet.getInt("price"));
         player.setTaken(resultSet.getBoolean("is_taken"));
-        player.setFirstXI(resultSet.getBoolean("is_first_xi"));
-        ClubDAO clubDao = new ClubDAO(connection);
-        Club club = clubDao.getClubById(resultSet.getLong("club_id"));
-        player.setClub(club.getId());
-
+        player.setFirstXI(resultSet.getBoolean("is_firstxi"));
+//        ClubDAO clubDao = new ClubDAO(connection);
+//        Club club = clubDao.getClubById(resultSet.getLong("club_id"));
+//        player.setClub(club.getId());
+        if (resultSet.getObject("club_id") != null) {
+            Club club = new Club();
+            club.setId(resultSet.getInt("club_id"));
+            // Ustawienia dla Club...
+            player.setClub(club.getId());
+        }
         return player;
     }
 }

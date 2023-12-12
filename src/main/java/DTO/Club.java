@@ -9,7 +9,6 @@ public class Club {
     private int matchesDraw;
     private int matchesLost;
     private int points;
-    private Integer user;
     private List<Player> players;
     private int grade;
     private int budget;
@@ -17,7 +16,7 @@ public class Club {
     public Club() {
     }
 
-    public Club(Integer id, String name, int matchesPlayed, int matchesWon, int matchesDraw, int matchesLost, int points, Integer user, List<Player> players, int grade, int budget) {
+    public Club(Integer id, String name, int matchesPlayed, int matchesWon, int matchesDraw, int matchesLost, int points, List<Player> players, int grade, int budget) {
         this.id = id;
         this.name = name;
         this.matchesPlayed = matchesPlayed;
@@ -25,7 +24,6 @@ public class Club {
         this.matchesDraw = matchesDraw;
         this.matchesLost = matchesLost;
         this.points = points;
-        this.user = user;
         this.players = players;
         this.grade = grade;
         this.budget = budget;
@@ -87,14 +85,6 @@ public class Club {
         this.points = points;
     }
 
-    public Integer getUser() {
-        return user;
-    }
-
-    public void setUser(Integer user) {
-        this.user = user;
-    }
-
     public List<Player> getPlayers() {
         return players;
     }
@@ -129,7 +119,6 @@ public class Club {
                 ", matchesDraw=" + matchesDraw +
                 ", matchesLost=" + matchesLost +
                 ", points=" + points +
-                ", user=" + user +
                 ", players=" + players +
                 ", grade=" + grade +
                 ", budget=" + budget +

@@ -13,7 +13,7 @@ public class Player {
     private int price;
     private boolean isTaken;
     private boolean isFirstXI;
-    private Integer club;
+    private long club;
 
     public Player() {
     }
@@ -112,7 +112,7 @@ public class Player {
         isFirstXI = firstXI;
     }
 
-    public Integer getClub() {
+    public long getClub() {
         return club;
     }
 

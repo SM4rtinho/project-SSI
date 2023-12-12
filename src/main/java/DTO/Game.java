@@ -5,8 +5,8 @@ import java.sql.Date;
 public class Game {
     private Integer id;
     private Date gameDate;
-    private Integer club1;
-    private Integer club2;
+    private long club1;
+    private long club2;
     private int goalsClub1;
     private int goalsClub2;
     private int shotsClub1;
@@ -52,7 +52,7 @@ public class Game {
         this.gameDate = gameDate;
     }
 
-    public Integer getClub1() {
+    public long getClub1() {
         return club1;
     }
 
@@ -60,7 +60,7 @@ public class Game {
         this.club1 = club1;
     }
 
-    public Integer getClub2() {
+    public long getClub2() {
         return club2;
     }
 
