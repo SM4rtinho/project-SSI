@@ -17,7 +17,7 @@ public class ClubDAO {
     }
 
     public void createClub(Club club) {
-        String sql = "INSERT INTO club (name, matches_played, matches_won, matches_draw, matches_lost, points, grade, budget) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO club (name, matches_played, matches_won, matches_draw, matches_lost, points, grade, budget, occupied) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, club.getName());
@@ -28,6 +28,7 @@ public class ClubDAO {
             statement.setInt(6, club.getPoints());
             statement.setInt(7, club.getGrade());
             statement.setInt(8, club.getBudget());
+            statement.setBoolean(9, club.isOccupied());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -35,7 +36,7 @@ public class ClubDAO {
     }
 
     public void updateClub(Club club) {
-        String sql = "UPDATE club SET name=?, matches_played=?, matches_won=?, matches_draw=?, matches_lost=?, points=?, grade=?, budget=? WHERE id=?";
+        String sql = "UPDATE club SET name=?, matches_played=?, matches_won=?, matches_draw=?, matches_lost=?, points=?, grade=?, budget=?, occupied=? WHERE id=?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, club.getName());
@@ -46,7 +47,8 @@ public class ClubDAO {
             statement.setInt(6, club.getPoints());
             statement.setInt(7, club.getGrade());
             statement.setInt(8, club.getBudget());
-            statement.setLong(9, club.getId()); // używamy id do określenia, którego klubu zaktualizować
+            statement.setBoolean(9, club.isOccupied());
+            statement.setLong(10, club.getId()); // używamy id do określenia, którego klubu zaktualizować
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -101,7 +103,7 @@ public class ClubDAO {
     }
 
     public void updateAllClubs(List<Club> clubs) {
-        String sql = "UPDATE club SET name=?, matches_played=?, matches_won=?, matches_draw=?, matches_lost=?, points=?, grade=?, budget=? WHERE id=?";
+        String sql = "UPDATE club SET name=?, matches_played=?, matches_won=?, matches_draw=?, matches_lost=?, points=?, grade=?, budget=?, occupied=? WHERE id=?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             for (Club club : clubs) {
@@ -113,7 +115,8 @@ public class ClubDAO {
                 statement.setInt(6, club.getPoints());
                 statement.setInt(7, club.getGrade());
                 statement.setInt(8, club.getBudget());
-                statement.setLong(9, club.getId()); // używamy id do określenia, którego klubu zaktualizować
+                statement.setBoolean(9, club.isOccupied());
+                statement.setLong(10, club.getId()); // używamy id do określenia, którego klubu zaktualizować
                 statement.addBatch();
             }
 
@@ -134,6 +137,7 @@ public class ClubDAO {
         club.setPoints(resultSet.getInt("points"));
         club.setGrade(resultSet.getInt("grade"));
         club.setBudget(resultSet.getInt("budget"));
+        club.setOccupied(resultSet.getBoolean("occupied"));
 
         return club;
     }

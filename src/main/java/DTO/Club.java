@@ -12,11 +12,12 @@ public class Club {
     private List<Player> players;
     private int grade;
     private int budget;
+    private boolean occupied;
 
     public Club() {
     }
 
-    public Club(Integer id, String name, int matchesPlayed, int matchesWon, int matchesDraw, int matchesLost, int points, List<Player> players, int grade, int budget) {
+    public Club(Integer id, String name, int matchesPlayed, int matchesWon, int matchesDraw, int matchesLost, int points, List<Player> players, int grade, int budget, boolean occupied) {
         this.id = id;
         this.name = name;
         this.matchesPlayed = matchesPlayed;
@@ -27,6 +28,7 @@ public class Club {
         this.players = players;
         this.grade = grade;
         this.budget = budget;
+        this.occupied = occupied;
     }
 
     public Integer getId() {
@@ -109,6 +111,14 @@ public class Club {
         this.budget = budget;
     }
 
+    public boolean isOccupied() {
+        return occupied;
+    }
+
+    public void setOccupied(boolean occupied) {
+        this.occupied = occupied;
+    }
+
     @Override
     public String toString() {
         return "Role{" +
@@ -122,6 +132,7 @@ public class Club {
                 ", players=" + players +
                 ", grade=" + grade +
                 ", budget=" + budget +
+                ", occupied=" + occupied +
                 '}';
     }
 }

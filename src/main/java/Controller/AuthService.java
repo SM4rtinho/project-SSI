@@ -1,6 +1,14 @@
+package Controller;
+
+import DTO.Club;
 import DTO.User;
 import org.apache.commons.codec.digest.DigestUtils;
 import DAO.UserDAO;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 
 public class AuthService {
     public User authenticate(String email, String password, UserDAO userDao) {
@@ -9,7 +17,6 @@ public class AuthService {
         if (user != null && isPasswordCorrect(password, user)) {
             return user;
         }
-
         return null;
     }
 
@@ -25,6 +32,18 @@ public class AuthService {
         user.setRole(role);
         user.setPassword(hashPassword(password));
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date parsedDate = null;
+        try {
+            parsedDate = dateFormat.parse(LocalDate.now().toString());
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        user.setCurr_date(new java.sql.Date(parsedDate.getTime()));
+
+
+
         userDao.createUser(user);
         return true;
     }
@@ -36,4 +55,5 @@ public class AuthService {
     private String hashPassword(String password) {
         return DigestUtils.sha256Hex(password);
     }
+
 }
