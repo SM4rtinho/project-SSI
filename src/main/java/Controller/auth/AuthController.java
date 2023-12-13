@@ -22,7 +22,7 @@ public class AuthController {
     private void setupEndpoints() {
         post("/autheticate", "application/json", (request, response) -> {
             String email = request.attribute("email");
-            String password = request.attribute("passowrd");
+            String password = request.attribute("password");
             User user = AuthService.authenticate(email,password,userDAO);
             if(user != null){
                 return gson.toJson(email+":"+password);
