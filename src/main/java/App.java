@@ -1,3 +1,4 @@
+import Controller.auth.AuthService;
 import DAO.UserDAO;
 import DTO.User;
 import com.google.gson.Gson;
