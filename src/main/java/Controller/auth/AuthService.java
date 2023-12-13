@@ -15,6 +15,20 @@ public class AuthService {
         return null;
     }
 
+    public static User getFromToken(String token, UserDAO userDAO){
+        String[] credentials = extractCredentials(token);
+        User user = authenticate(credentials[0],credentials[1],userDAO);
+        return user;
+    }
+
+    public static String[] extractCredentials(String encodedHeader){
+        if (encodedHeader != null) {
+            return encodedHeader.split(":");
+        } else {
+            return null;
+        }
+    }
+
     public static Boolean register(String email, String password, String name, String role, UserDAO userDao) {
         if (userDao.getUserByEmail(email) != null) {
             // User already exists
