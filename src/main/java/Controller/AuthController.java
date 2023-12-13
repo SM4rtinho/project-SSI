@@ -1,5 +1,6 @@
 package Controller;
 
+import DAO.ClubDAO;
 import DAO.UserDAO;
 import DTO.User;
 import com.google.gson.Gson;
@@ -12,9 +13,11 @@ public class AuthController {
     private final AuthService authService = new AuthService();
     private final Gson gson = new Gson();
     private final UserDAO userDAO;
+    private final ClubDAO clubDAO;
 
-    public AuthController(UserDAO userDAO) {
+    public AuthController(UserDAO userDAO, ClubDAO clubDAO) {
         this.userDAO = userDAO;
+        this.clubDAO = clubDAO;
         setupEndpoints();
     }
 
@@ -26,7 +29,7 @@ public class AuthController {
             User userRegister = gson.fromJson(jsonUser, User.class);
 
             Boolean result = authService.register(userRegister.getEmail(), userRegister.getPassword(),
-                    userRegister.getName(), "USER", userDAO);
+                    userRegister.getName(), "USER", userDAO, clubDAO);
 
             if (!result) {
                 response.status(409); // Conflict - user already exists
@@ -54,7 +57,7 @@ public class AuthController {
 
             response.status(200);
             //return "Logged in";
-            return gson.toJson(userLogin);
+            return gson.toJson(user);
         });
     }
 }

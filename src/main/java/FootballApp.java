@@ -28,7 +28,7 @@ public class FootballApp {
             GameController gameController = new GameController(gameDAO, clubDAO);
             PlayerController playerController = new PlayerController(playerDAO, userDAO, clubDAO);
             UserController userController = new UserController(userDAO, clubDAO, gameDAO);
-            AuthController authController = new AuthController(userDAO);
+            AuthController authController = new AuthController(userDAO, clubDAO);
 
             // Konfiguracja CORS
             options("/*", (request, response) -> {
