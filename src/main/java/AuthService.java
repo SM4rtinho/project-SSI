@@ -1,5 +1,3 @@
-package Controller.auth;
-
 import DTO.User;
 import org.apache.commons.codec.digest.DigestUtils;
 import DAO.UserDAO;

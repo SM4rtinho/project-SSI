@@ -1,4 +1,3 @@
-import Controller.auth.AuthService;
 import DAO.UserDAO;
 import DTO.User;
 import com.google.gson.Gson;
@@ -20,7 +19,7 @@ public class App {
     private static Gson gson = new Gson();
 
     public static void main(String[] args) {
-        port(8081);
+        port(2137);
 
         // Inicjalizacja połączenia z bazą danych SQLite
         Connection dbConnection = Database.getConnection();
@@ -55,7 +54,7 @@ public class App {
             return gson.toJson(users);
         });
 
-        post("/login", (request, response) -> {
+        post("/authenticate", (request, response) -> {
             String jsonUser = request.body();
 
             User userLogin = gson.fromJson(jsonUser, User.class);
@@ -68,7 +67,7 @@ public class App {
             }
 
             response.status(200);
-            return "Logged in";
+            return userLogin.getEmail()+":"+userLogin.getPassword();
         });
 
         post("/register", (request, response) -> {
@@ -86,6 +85,16 @@ public class App {
 
             response.status(200);
             return "User created";
+        });
+
+        get("/me", "application/json", (request, response) -> {
+            String token = request.headers("Authorization").substring(7); //pobranie tokena
+            User user = AuthService.getFromToken(token,userDao);
+            if (user != null) {
+                return gson.toJson(user);
+            } else {
+                return null;
+            }
         });
     }
 }
