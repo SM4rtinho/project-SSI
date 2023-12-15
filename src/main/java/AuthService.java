@@ -2,6 +2,8 @@ import DTO.User;
 import org.apache.commons.codec.digest.DigestUtils;
 import DAO.UserDAO;
 
+import static scala.Console.println;
+
 public class AuthService {
     public static User authenticate(String email, String password, UserDAO userDao) {
         User user = userDao.getUserByEmail(email);
@@ -15,8 +17,8 @@ public class AuthService {
 
     public static User getFromToken(String token, UserDAO userDAO){
         String[] credentials = extractCredentials(token);
-        User user = authenticate(credentials[0],credentials[1],userDAO);
-        return user;
+        println("'"+credentials[0]+"'" + "|" + "'"+ credentials[1]+"'");
+        return authenticate(credentials[0],credentials[1],userDAO);
     }
 
     public static String[] extractCredentials(String encodedHeader){

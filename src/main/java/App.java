@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 
+import static scala.Console.println;
 import static spark.Spark.*;
 
 public class App {
@@ -59,15 +60,14 @@ public class App {
 
             User userLogin = gson.fromJson(jsonUser, User.class);
 
-            User user = authService.authenticate(userLogin.getEmail(), userLogin.getPassword(), userDao);
+            User user = AuthService.authenticate(userLogin.getEmail(), userLogin.getPassword(), userDao);
 
             if (user == null) {
                 response.status(401);
                 return "Unauthorized";
             }
-
             response.status(200);
-            return userLogin.getEmail()+":"+userLogin.getPassword();
+            return gson.toJson(userLogin.getEmail()+":"+userLogin.getPassword());
         });
 
         post("/register", (request, response) -> {
@@ -75,7 +75,7 @@ public class App {
 
             User userRegister = gson.fromJson(jsonUser, User.class);
 
-            Boolean result = authService.register(userRegister.getEmail(), userRegister.getPassword(),
+            Boolean result = AuthService.register(userRegister.getEmail(), userRegister.getPassword(),
                     userRegister.getName(), userRegister.getRole(), userDao);
 
             if (!result) {
@@ -84,17 +84,41 @@ public class App {
             }
 
             response.status(200);
-            return "User created";
+            return userRegister.getEmail()+":"+userRegister.getPassword();
         });
 
         get("/me", "application/json", (request, response) -> {
-            String token = request.headers("Authorization").substring(7); //pobranie tokena
+            String token = request.headers("Authorization").substring(8); //pobranie tokena
             User user = AuthService.getFromToken(token,userDao);
+            println(user.toString());
             if (user != null) {
                 return gson.toJson(user);
             } else {
                 return null;
             }
         });
+
+        options("/*",
+                (request, response) -> {
+
+                    String accessControlRequestHeaders = request
+                            .headers("Access-Control-Request-Headers");
+                    if (accessControlRequestHeaders != null) {
+                        response.header("Access-Control-Allow-Headers",
+                                accessControlRequestHeaders);
+                    }
+
+                    String accessControlRequestMethod = request
+                            .headers("Access-Control-Request-Method");
+                    if (accessControlRequestMethod != null) {
+                        response.header("Access-Control-Allow-Methods",
+                                accessControlRequestMethod);
+                    }
+
+                    return "OK";
+                });
+
+        before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
+
     }
 }
